@@ -1,0 +1,294 @@
+<template>
+    <div class="content-center">
+        <div class="content" :style="{ background: '#fff', padding: '10px', minHeight: '800px' }">
+            <div class="header" >
+                <a-input-search
+                        v-model="requestParam.title"
+                        placeholder="请输入您所需要的内容"
+                        enter-button
+                        size="large"
+                        @search="onSearch"
+                />
+                <a-layout-header style="height: 40px;background-color: white;width: auto;padding: 0">
+                    <a-menu
+                            theme="light"
+                            mode="horizontal"
+                            style="margin-top: 10px;background-color: white;"
+                    >
+                        <a-menu-item @click="newBlog" class="tag">
+                            最新
+                        </a-menu-item >
+                        <a-menu-item  class="tag">
+                            最热
+                        </a-menu-item >
+                        <a-menu-item @click="tagSearch(item)" class="tag" v-for="(item,index) in tags" :key="index">
+                            {{item.name}}
+                        </a-menu-item >
+                    </a-menu>
+                </a-layout-header>
+            </div>
+            <a-list  item-layout="vertical" :loading=loading size="large"  :data-source="blogList">
+                <div slot="footer"><b>API接口开放平台</b></div>
+                <a-list-item slot="renderItem" key="item.title" slot-scope="item, index">
+                    <template  slot="actions">
+                        <span>
+                            {{item.createtime}}
+                        </span>
+                        <span @click="blogcollect(item.id,index)">
+                            <a-icon type="star-o" v-if="!item.isNoCollect" style="margin-right: 8px" />
+                            <a-icon type="star" v-if="item.isNoCollect" style="margin-right: 8px;color: orange" theme="filled" />
+                          {{item.collectNum}}
+                        </span>
+                        <span @click="bloglike(item.id,index)">
+                           <a-icon  v-if="!item.isNoLike" type="like-o" style="margin-right: 8px" />
+                           <a-icon  type="like" v-if="item.isNoLike" theme="filled" style="margin-right: 8px;color: red"/>
+                          {{item.likeNum}}
+                        </span>
+                        <span>
+                          <a-icon type="message" style="margin-right: 8px" />
+                          {{item.messageNum}}
+                        </span>
+                        <span v-if="user.id === item.authorid">
+                          删除
+                        </span>
+                        <span v-if="user.id === item.authorid">
+                          修改
+                        </span>
+                    </template>
+                    <img
+                            slot="extra"
+                            width="272"
+                            height="172px"
+                            alt="logo"
+                            v-if="item.cover"
+                            :src="$store.state.blogImgUrl+item.cover"
+                    />
+                    <a-list-item-meta  style="font-weight: 800;font-size: 60px">
+                        <a slot="title">{{ item.authorname }}</a>
+                        <a-avatar v-if="item.authoravatar" shape="square" :size="40" slot="avatar" :src="$store.state.userImgUrl+item.authoravatar" />
+                    </a-list-item-meta>
+                    <a class="blog-title" @click="$router.push('/forum/detail/'+item.id)" href="javascript:void(0)">{{item.title}}</a><br>
+                    <p class="blog-content" v-html="getIntroduction(item.content)"></p>
+                    <div>
+                        <a-tag :color="color[index]" v-for="(item,index) in item.tag" :key="index">
+                            {{item}}
+                        </a-tag>
+                    </div>
+                </a-list-item>
+            </a-list>
+            <div style="text-align: right">
+                <a-pagination v-model="requestParam.current" :defaultPageSize="requestParam.pageSize" :total="total" :change="aaa" show-less-items />
+            </div>
+        </div>
+        <div class="side">
+            <a-card hoverable style="width: 100%">
+                <img
+                        slot="cover"
+                        alt="example"
+                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                />
+                <template slot="actions" class="ant-card-actions">
+                    <a-icon key="setting" type="home" @click="$router.push('/user/detail/'+user.id)"/>
+                    <a-icon key="edit" type="edit" @click="$router.push('/forum/write')" />
+                    <a-icon key="ellipsis" type="ellipsis" />
+                </template>
+                <a-card-meta :title="user.userName" :description="user.description">
+                    <a-avatar
+                            slot="avatar"
+                            :src="$store.state.userImgUrl+user.userAvatar"
+                    />
+                </a-card-meta>
+
+                <div style="width: 100%;height: 100px">
+
+                </div>
+            </a-card>
+        </div>
+    </div>
+</template>
+<script>
+    import {
+        getBlogList,
+        getBlogTagList,
+        blogLike,
+        blogCollect
+    } from './api'
+    import MarkdownIt from 'markdown-it';
+    export default {
+        data() {
+            return {
+                url:'http://localhost:9000/api/user/',
+                pagination: {
+                    onChange: page => {
+                        console.log(page);
+                    },
+                    pageSize: 10,
+                },
+                actions: [
+                    { type: 'star-o', text: '156' },
+                    { type: 'like-o', text: '156' },
+                    { type: 'message', text: '2' },
+                ],
+                requestParam:{
+                  title:'',
+                  tag:'',
+                  current:0,
+                  pageSize:10
+                },
+                total:'',
+                loading:true,
+                blogList:[],
+                color:["#f50","#2db7f5","#87d068","#108ee9","#F56C6C","#909399","#CC901F","#C731E6","#E631B9","#EE1245"],
+                user:{},
+                tags:{},
+                total:''
+            };
+        },
+        mounted() {
+            this.getBlogList()
+            this.getCurrentLoginUser();
+            this.getBlogTagList()
+        },
+        methods:{
+            aaa(page){
+                console.log(page)
+            },
+            async blogcollect(id,index){
+                let newData=[...this.blogList]
+                let param={
+                    id:id
+                }
+                let res=await blogCollect(param)
+                if(res.data.code===0){
+                    let num = res.data.data
+                    newData[index].collectNum+=num
+                    if(num<0){
+                        newData[index].isNoCollect=false
+                    }else{
+                        newData[index].isNoCollect=true
+                    }
+                }else{
+                    this.$message.error(res.data.message)
+                }
+                this.blogList=newData
+            },
+            async bloglike(id,index){
+              let newData=[...this.blogList]
+              let param={
+                  id:id
+              }
+              let res=await blogLike(param)
+              if(res.data.code===0){
+                 let num = res.data.data
+                 newData[index].likeNum+=num
+                  if(num<0){
+                      newData[index].isNoLike=false
+                  }else{
+                      newData[index].isNoLike=true
+                  }
+              }else{
+                  this.$message.error(res.data.message)
+              }
+              this.blogList=newData
+            },
+            newBlog(){
+              this.requestParam.tag='',
+              this.requestParam.title=''
+              this.getBlogList()
+            },
+            onSearch(){
+                this.getBlogList();
+            },
+            tagSearch(item){
+                this.requestParam.tag=item.name
+                this.getBlogList()
+            },
+            async getCurrentLoginUser(){
+              let res=await this.$utils.getCurrentLoginUser();
+              if(res){
+                  this.user=res.data.data
+              }
+            },
+            async getBlogList(){
+                this.loading=true
+                let param={
+                    ...this.requestParam
+                }
+                let res=await getBlogList(param);
+                const {records,total} =res.data.data
+                this.blogList=records
+                this.total=total
+                for (let i = 0; i < this.blogList.length; i++) {
+                    this.blogList[i].tag=JSON.parse(this.blogList[i].tag)
+                }
+                this.loading=false
+            },
+            async getBlogTagList(){
+                let res= await getBlogTagList()
+                this.tags=res.data.data
+            },
+            //md格式
+            getIntroduction(content) {
+                // 获取 Markdown 文本的前 100 个字符作为简介
+                const md = new MarkdownIt();
+                const tokens = md.parse(content, {}); // 解析 Markdown 文本
+                let introText = '';
+
+                // 获取 Markdown 文本的前 100 个字符作为简介
+                for (const token of tokens) {
+                    if (token.type === 'inline') {
+                        introText += token.children.reduce((text, child) => text + child.content, '');
+                    }
+                    if (introText.length >= 300) {
+                        break;
+                    }
+                }
+
+                return introText.length > 300 ? introText.substring(0, 300) + '...' : introText;
+            },
+        }
+    };
+</script>
+<style scoped>
+    .header{
+        display: inline-block;
+        width: 100%;
+        height: 120px;
+        /*background-color: blue;*/
+    }
+    .content{
+        display: inline-block;
+        width: 80%;
+    }
+    .side{
+        margin-top: 10px;
+        display: inline-block;
+        width: 20%;
+        height: auto;
+        min-height: 300px;
+        float: right;
+    }
+    .tag{
+        height: 40px;
+        line-height: 40px;
+        background-color: whitesmoke;
+        margin-left: 2px;
+    }
+    .blog-title{
+        font-size: 20px;
+        color: black;
+        font-weight: 800
+    }
+    .blog-title:hover{
+        color: #44b0ff;
+    }
+    .blog-content{
+        margin-top: 10px;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3; /* 显示三行，后面省略 */
+        word-break: break-all;
+        word-wrap: break-word;
+        overflow: hidden;
+    }
+</style>
