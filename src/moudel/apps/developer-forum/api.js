@@ -35,3 +35,7 @@ export const blogCollect = (param) => {
 export const deleteBlog = (param) => {
     return request.post("/api/blog/delete",param)
 }
+//修改博客
+export const updateBlog = (param) => {
+    return request.post("/api/blog/update",param)
+}

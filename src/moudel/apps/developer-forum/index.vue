@@ -48,10 +48,10 @@
                           <a-icon type="message" style="margin-right: 8px" />
                           {{item.messageNum}}
                         </span>
-                        <span v-if="user.id === item.authorid" @click="deleteBlog(item.id)">
-                          删除
-                        </span>
-                        <span v-if="user.id === item.authorid">
+                        <a-popconfirm v-if="user.id === item.authorid"  title="确定要删除吗?" okText="确定" cancelText="取消"  @confirm="() =>deleteBlog(item.id)">
+                            <span>删除</span>
+                        </a-popconfirm>
+                        <span v-if="user.id === item.authorid" @click="$router.push('/forum/update/'+item.id)">
                           修改
                         </span>
                     </template>
@@ -102,20 +102,20 @@
             <div hoverable style="width: 100%;margin-top: 30px">
                 <a-row>
                     <a-col :span="24">
-                        <a-icon type="android" />
-                        <span>站长：聪明的小猫猫</span>
+                        <a-icon type="crown" />
+                        <span style="margin-left: 5px">站长：聪明的小猫猫</span>
                     </a-col>
                 </a-row>
                 <a-row>
                     <a-col :span="24">
-                        <a-icon type="android" />
-                        <span>邮箱：1345498749@qq.com</span>
+                        <a-icon type="mail" />
+                        <span style="margin-left: 5px">邮箱：1345498749@qq.com</span>
                     </a-col>
                 </a-row>
                 <a-row>
                     <a-col :span="24">
-                        <a-icon type="android" />
-                        <span>邮箱：1345498749@qq.com</span>
+                        <a-icon type="github" />
+                        <span style="margin-left: 5px">github：<a href="https://github.com/WuHao-126/api-project">仓库地址</a></span>
                     </a-col>
                 </a-row>
             </div>

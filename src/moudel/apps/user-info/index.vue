@@ -81,9 +81,11 @@
                     <div>
                         <a-list item-layout="horizontal" :data-source="myBlog">
                             <a-list-item slot="renderItem" slot-scope="item, index">
-                                <a-list-item-meta
-                                        :description="item.createtime"
-                                >
+                                <a slot="actions" @click="$router.push('/forum/update/'+item.id)">修改</a>
+                                <a-popconfirm slot="actions"  title="确定要删除吗?" okText="确定" cancelText="取消"  @confirm="() =>deleteBlog(item.id)">
+                                    <a>删除</a>
+                                </a-popconfirm>
+                                <a-list-item-meta :description="item.createtime">
                                     <a slot="title" @click="$router.push('/forum/detail/'+item.id)">{{ item.title }}</a>
                                 </a-list-item-meta>
                             </a-list-item>
@@ -98,9 +100,10 @@
                     <div>
                         <a-list item-layout="horizontal" :data-source="myCollect">
                             <a-list-item slot="renderItem" slot-scope="item, index">
-                                <a-list-item-meta
-                                        :description="item.createtime"
-                                >
+                                <a-popconfirm slot="actions"  title="确定要取消吗?" okText="确定" cancelText="取消"  @confirm="() =>blogcollect(item.id)">
+                                    <a>取消收藏</a>
+                                </a-popconfirm>
+                                <a-list-item-meta :description="item.createtime">
                                     <a slot="title" @click="$router.push('/forum/detail/'+item.id)">{{ item.title }}</a>
                                 </a-list-item-meta>
                             </a-list-item>
@@ -141,6 +144,7 @@
         updateUserInfo,
     } from './api'
     import {emailBind, sendCode} from "@/moudel/apps/interface-apply/api";
+    import {blogCollect, deleteBlog} from "@/moudel/apps/developer-forum/api";
     export default {
         name: "index",
         data(){
@@ -269,6 +273,31 @@
                     this.emailButton=false;
                     this.$router.go(0)
                 }
+            },
+            async deleteBlog(id){
+                let param={
+                    id:id
+                }
+                let res = await deleteBlog(param)
+                if(res.data.code===0){
+                    this.$message.success("删除博客成功")
+                    this.getMyBlog();
+                }else{
+                    this.$message.error(res.data.message)
+                }
+            },
+            async blogcollect(id){
+                let param={
+                    id:id
+                }
+                let res=await blogCollect(param)
+                if(res.data.code===0){
+                    this.$message.success("取消收藏成功");
+                    this.getMyCollect()
+                }else{
+                    this.$message.error(res.data.message)
+                }
+
             },
             showModal() {
                 let param={

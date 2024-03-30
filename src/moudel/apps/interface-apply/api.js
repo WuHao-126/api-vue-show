@@ -1,9 +1,9 @@
 import request from 'axios'
 export const sendCode = (param)=>{
-    return request.post("/api/user/email/code",param)
+    return request.post("/api/email/code",param)
 }
 export const emailBind = (param)=>{
-    return request.post("/api/user/email/bind",param)
+    return request.post("/api/email/bind",param)
 }
 export const getKey = ()=>{
     return request.get("/api/user/key")

@@ -48,13 +48,20 @@
                           @imgAdd="$imgAdd"
             ></mavon-editor>
         </div>
-        <div style="text-align: right;padding: 20px">
-            <a-button @click="saveBlog" style="margin-right: 10px" type="primary">
-                保存
+        <div style="text-align: right;padding: 20px;margin-top: 100px">
+            <a-button @click="updateBlog" style="margin-right: 10px" type="primary">
+                修改
             </a-button>
-            <a-button @click="clearContent" type="primary">
-                清空
-            </a-button>
+            <a-popconfirm   title="确定要清空?" okText="确定" cancelText="取消"  @confirm="() =>clearContent()">
+                <a-button type="primary">
+                    清空
+                </a-button>
+            </a-popconfirm>
+            <a-popconfirm   title="确定要取消" okText="确定" cancelText="取消"  @confirm="() =>$router.go(-1)">
+                <a-button style="margin-left: 10px"  type="primary">
+                    取消
+                </a-button>
+            </a-popconfirm>
         </div>
     </div>
 </template>
@@ -66,8 +73,9 @@
         reader.readAsDataURL(img);
     }
     import {
-        insertBlog,
-        getBlogTagList
+        getBlogDetailInfo,
+        getBlogTagList,
+        updateBlog
     } from '../api'
     import axios from 'axios'
     export default {
@@ -90,25 +98,38 @@
             }
         },
         mounted() {
-          this.getTage();
+            this.getTage();
+            this.getBlogDetailInfo();
         },
         methods:{
-            async saveBlog(){
-              this.blog.tag=JSON.stringify(this.blog.tag)
-              let param={
-                  ...this.blog
-              }
-              let res= await insertBlog(param)
-              let flag = this.$utils.dataCheck(res,"发布成功","发布失败","/forum")
-                console.log(flag)
+            async getBlogDetailInfo(){
+               let id=this.$route.params.id
+               let res= await getBlogDetailInfo(id)
+               if(res.data.code===0){
+                   this.blog=res.data.data
+                   this.blog.tag=JSON.parse(this.blog.tag)
+               }
+            },
+            async updateBlog(){
+                this.blog.tag=JSON.stringify(this.blog.tag)
+               let param={
+                   ...this.blog
+               }
+               let res = await updateBlog(param)
+                if(res.data.code===0){
+                    this.$message.success("修改成功")
+                    this.$router.go(-1)
+                }else{
+                    this.$message.error(res.data.message)
+                }
             },
             async getTage(){
-              let res = await getBlogTagList();
-              if(res.data.code===0){
-                  this.selectTag=res.data.data
-              }else{
-                  thias.$message.error("获取标签失败")
-              }
+                let res = await getBlogTagList();
+                if(res.data.code===0){
+                    this.selectTag=res.data.data
+                }else{
+                    thias.$message.error("获取标签失败")
+                }
             },
             clearContent(){
                 this.blog={}
