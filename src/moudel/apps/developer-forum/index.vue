@@ -48,7 +48,7 @@
                           <a-icon type="message" style="margin-right: 8px" />
                           {{item.messageNum}}
                         </span>
-                        <span v-if="user.id === item.authorid">
+                        <span v-if="user.id === item.authorid" @click="deleteBlog(item.id)">
                           删除
                         </span>
                         <span v-if="user.id === item.authorid">
@@ -77,7 +77,7 @@
                 </a-list-item>
             </a-list>
             <div style="text-align: right">
-                <a-pagination v-model="requestParam.current" :defaultPageSize="requestParam.pageSize" :total="total" :change="aaa" show-less-items />
+                <a-pagination :default-current="1" :total=total @change="aaa"/>
             </div>
         </div>
         <div class="side">
@@ -85,24 +85,40 @@
                 <img
                         slot="cover"
                         alt="example"
-                        src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                        src="https://picsum.photos/300/200"
                 />
-                <template slot="actions" class="ant-card-actions">
+                <template v-if="user!==''" slot="actions" class="ant-card-actions">
                     <a-icon key="setting" type="home" @click="$router.push('/user/detail/'+user.id)"/>
                     <a-icon key="edit" type="edit" @click="$router.push('/forum/write')" />
                     <a-icon key="ellipsis" type="ellipsis" />
                 </template>
-                <a-card-meta :title="user.userName" :description="user.description">
+                <a-card-meta v-if="user.userName" :title="user.userName" :description="user.description">
                     <a-avatar
                             slot="avatar"
                             :src="$store.state.userImgUrl+user.userAvatar"
                     />
                 </a-card-meta>
-
-                <div style="width: 100%;height: 100px">
-
-                </div>
             </a-card>
+            <div hoverable style="width: 100%;margin-top: 30px">
+                <a-row>
+                    <a-col :span="24">
+                        <a-icon type="android" />
+                        <span>站长：聪明的小猫猫</span>
+                    </a-col>
+                </a-row>
+                <a-row>
+                    <a-col :span="24">
+                        <a-icon type="android" />
+                        <span>邮箱：1345498749@qq.com</span>
+                    </a-col>
+                </a-row>
+                <a-row>
+                    <a-col :span="24">
+                        <a-icon type="android" />
+                        <span>邮箱：1345498749@qq.com</span>
+                    </a-col>
+                </a-row>
+            </div>
         </div>
     </div>
 </template>
@@ -111,7 +127,8 @@
         getBlogList,
         getBlogTagList,
         blogLike,
-        blogCollect
+        blogCollect,
+        deleteBlog
     } from './api'
     import MarkdownIt from 'markdown-it';
     export default {
@@ -132,16 +149,16 @@
                 requestParam:{
                   title:'',
                   tag:'',
-                  current:0,
+                  current:1,
                   pageSize:10
                 },
                 total:'',
                 loading:true,
                 blogList:[],
                 color:["#f50","#2db7f5","#87d068","#108ee9","#F56C6C","#909399","#CC901F","#C731E6","#E631B9","#EE1245"],
-                user:{},
+                user:'',
                 tags:{},
-                total:''
+                total:0
             };
         },
         mounted() {
@@ -151,7 +168,22 @@
         },
         methods:{
             aaa(page){
-                console.log(page)
+                this.requestParam.current=page
+                this.getBlogList()
+            },
+            async getBlogList(){
+                this.loading=true
+                let param={
+                    ...this.requestParam
+                }
+                let res=await getBlogList(param);
+                const {records,total} =res.data.data
+                this.blogList=records
+                this.total=total
+                for (let i = 0; i < this.blogList.length; i++) {
+                    this.blogList[i].tag=JSON.parse(this.blogList[i].tag)
+                }
+                this.loading=false
             },
             async blogcollect(id,index){
                 let newData=[...this.blogList]
@@ -209,20 +241,6 @@
                   this.user=res.data.data
               }
             },
-            async getBlogList(){
-                this.loading=true
-                let param={
-                    ...this.requestParam
-                }
-                let res=await getBlogList(param);
-                const {records,total} =res.data.data
-                this.blogList=records
-                this.total=total
-                for (let i = 0; i < this.blogList.length; i++) {
-                    this.blogList[i].tag=JSON.parse(this.blogList[i].tag)
-                }
-                this.loading=false
-            },
             async getBlogTagList(){
                 let res= await getBlogTagList()
                 this.tags=res.data.data
@@ -246,6 +264,16 @@
 
                 return introText.length > 300 ? introText.substring(0, 300) + '...' : introText;
             },
+            async deleteBlog(id){
+                let param={
+                    id:id
+                }
+                let res = await deleteBlog(param)
+                if(res.data.code===0){
+                    this.$message.success("删除成功")
+                    this.getBlogList()
+                }
+            }
         }
     };
 </script>

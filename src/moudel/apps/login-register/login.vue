@@ -80,7 +80,7 @@
             }
         },
         mounted() {
-            document.addEventListener('keydown', this.handleKeyPress);
+            // document.addEventListener('keydown', this.handleKeyPress);
         },
         methods:{
             skip(){

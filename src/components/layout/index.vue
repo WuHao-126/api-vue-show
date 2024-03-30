@@ -8,7 +8,6 @@
         <a-layout-content >
             <div class="content">
                 <div  :style="{ background: '#fff', padding: '24px', minHeight: '810px',marginTop:'57px' }">
-                    <a-spin v-if="loading" size="large" style="margin-left: 50%;margin-top: 300px" />
                     <router-view />
                 </div>
             </div>

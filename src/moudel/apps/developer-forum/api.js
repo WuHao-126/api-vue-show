@@ -31,3 +31,7 @@ export const blogLike = (param) => {
 export const blogCollect = (param) => {
     return request.post("/api/blog/collect",param)
 }
+//删除博客
+export const deleteBlog = (param) => {
+    return request.post("/api/blog/delete",param)
+}

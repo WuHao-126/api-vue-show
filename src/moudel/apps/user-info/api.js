@@ -14,3 +14,13 @@ export const getMyBlog = (param)=>{
 export const getMyCollect = (param) =>{
     return request.post("/api/blog/my/collect",param)
 }
+//修改用户信息
+export const updateUserInfo = (param) =>{
+    return request.post("/api/user/update",param)
+}
+export const sendCode = (param)=>{
+    return request.post("/api/user/email/code",param)
+}
+export const emailBind = (param)=>{
+    return request.post("/api/user/email/bind",param)
+}

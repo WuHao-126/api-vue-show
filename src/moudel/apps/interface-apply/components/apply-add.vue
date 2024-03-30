@@ -190,7 +190,7 @@
                 <a-button style="width: 200px;margin-left: 8px;" v-if="current < steps.length - 1" type="primary" @click="next">
                     下一步
                 </a-button>
-                <a-button
+                <a-button disabled="true"
                         v-if="current == steps.length - 1"
                         type="primary"
                         style="width: 200px;margin-left: 8px"
@@ -415,7 +415,7 @@
             async sendCode(){
                 let email =this.form.getFieldValue('email')
                 console.log(email)
-                if(email === null || email ===''){
+                if(email === null || email ==='' || email === undefined){
                     this.$message.error("请输入邮箱")
                     return
                 }
@@ -437,6 +437,8 @@
                     }, 1000);
                 }else if(res.data.code === 4104){
                     this.$message.error("此邮箱已注册")
+                }else if(res.data.code === 40000){
+                    this.$message.error("请填写邮箱")
                 }
             },
             async emailBind(values){

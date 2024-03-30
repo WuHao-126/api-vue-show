@@ -38,11 +38,11 @@
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        action="api/upload"
+                        action="api/upload/blog"
                         :before-upload="beforeUpload"
                         @change="handleChange"
                 >
-                    <img v-if="imageUrl" :src="imageUrl" alt="avatar" />
+                    <img style="width: 200px;height: 180px" v-if="imageUrl" :src="imageUrl" alt="avatar" />
                     <div v-else>
                         <a-icon :type="loading ? 'loading' : 'plus'" />
                         <div class="ant-upload-text">
@@ -148,7 +148,7 @@
                 var formdata = new FormData();
                 formdata.append('file', $file);
                 axios({
-                    url: '/api/upload/markendown',
+                    url: '/api/upload/markdown',
                     method: 'post',
                     data: formdata,
                     headers: { 'Content-Type': 'multipart/form-data' },
