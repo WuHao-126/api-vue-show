@@ -75,11 +75,11 @@
                                 size="large"
                                 enter-button="发起请求"
                                 @search="invokeInterface">
-                            <a-select slot="addonBefore" default-value="Http://" style="width: 90px" >
-                                <a-select-option value="Http://">
+                            <a-select slot="addonBefore" v-model="requestInvokeParam.method" style="width: 90px" >
+                                <a-select-option value="GET">
                                     GET
                                 </a-select-option>
-                                <a-select-option value="Https://">
+                                <a-select-option value="POST">
                                     POST
                                 </a-select-option>
                             </a-select>
@@ -263,7 +263,9 @@
               requestHeaderParams:[],
               requestFieldParams:[],
               responseFieldParams:[],
-              requestInvokeParam:[],
+              requestInvokeParam:{
+                  method:'GET'
+              },
               errorFieldParams:[],
               responseBody:''
           }
