@@ -19,6 +19,10 @@ export const getBlogDetailInfo = (param) =>{
 export const insertComment = (param) =>{
     return request.post("/api/blog/insert/comment",param)
 }
+//删除评论
+export const deleteComment = (param) =>{
+    return request.post("/api/blog/delete/comment",param)
+}
 //根据文章ID获取评论列表
 export const getCommentListByAuthorId = (param) =>{
     return request.get("/api/blog/comment/list/"+param)
