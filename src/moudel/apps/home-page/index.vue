@@ -17,8 +17,8 @@
             <div class="back-img2"/>
         </div>
 
-        <div class="home-content" v-if="false">
-            <div style="margin-top: 100px">
+        <div class="home-content" v-if="true">
+            <div style="margin-top: 30px">
                 <a-timeline mode="alternate">
                     <a-timeline-item>2024.3.23 网站上线运营</a-timeline-item>
                     <a-timeline-item color="green">
@@ -105,7 +105,7 @@
         height: 400px;
         left: 100px;
         top: 60px;
-        z-index: 2;
+        z-index: 3;
 
     }
 </style>
