@@ -106,6 +106,8 @@
                         window.sessionStorage.setItem("user",userId)
                     }
                     this.$utils.routerPush('/')
+                }else{
+                    this.$message.error(res.data.message)
                 }
             },
             handleKeyPress(event) {

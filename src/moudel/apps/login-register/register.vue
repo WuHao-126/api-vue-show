@@ -96,7 +96,7 @@
             }
         },
         mounted() {
-            document.addEventListener('keydown', this.handleKeyPress);
+            // document.addEventListener('keydown', this.handleKeyPress);
         },
         methods:{
             skip(){
@@ -109,7 +109,6 @@
               let res= await register(param);
               if(res.data.code===0){
                   this.$message.success("注册成功")
-                  document.removeEventListener("keydown")
                   this.$router.push('/login')
               }else{
                   this.$message.error("注册失败")
@@ -153,12 +152,12 @@
                     this.inputShow=true
                 }
             },
-            handleKeyPress(event) {
-                // 监听键盘事件，按下 "Enter" 键时触发登录按钮的点击事件
-                if (event.key === 'Enter') {
-                    this.register();
-                }
-            }
+            // handleKeyPress(event) {
+            //     // 监听键盘事件，按下 "Enter" 键时触发登录按钮的点击事件
+            //     if (event.key === 'Enter') {
+            //         this.register();
+            //     }
+            // }
         }
     }
 </script>

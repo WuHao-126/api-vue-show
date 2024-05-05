@@ -33,30 +33,28 @@
                     API 文档
                   </span>
                     <div style="width: 60%">
-
-                        <h4 class="a">请求头Header:</h4>
-                        <a-table tableLayout="auto" size="middle" :columnWidth="20" :columns="requestHeaderColumns" :data-source="requestHeaderParams" :pagination="false">
-                            <span slot="name" slot-scope="text">{{ text }}</span>
-                        </a-table>
-
-                        <h4 style="margin-top: 20px">请求参数:</h4>
-                        <a-table tableLayout="auto" size="middle" :columns="requestParamsColumns" :data-source="requestFieldParams" :pagination="false">
-                            <span slot="name" slot-scope="text">{{ text }}</span>
-                        </a-table>
-
-                        <h4 style="margin-top: 20px">响应参数:</h4>
-                        <a-table tableLayout="auto" size="middle" :columns="repParamsColumns" :data-source="responseFieldParams" :pagination="false">
-                            <a slot="name" slot-scope="text">{{ text }}</a>
-                        </a-table>
-
-                        <h4 style="margin-top: 20px">响应参数实例:</h4>
-                        <div v-html="">
-                           <pre style="background-color: black;color: white;width: 100%">
-                               <code>
-                                 {{interfaceInfo.responseParamsExample}}
-                               </code>
-                           </pre>
+                        <div>
+                            <span class="table-title">请求头:</span>
+                            <a-table class="table" tableLayout="auto" size="middle" :columnWidth="20" :columns="requestHeaderColumns" :data-source="requestHeaderParams" :pagination="false">
+                                <span slot="name" slot-scope="text">{{ text }}</span>
+                            </a-table>
                         </div>
+                        <div style="margin-top: 20px">
+                            <span class="table-title">请求参数:</span>
+                            <a-table class="table" tableLayout="auto" size="middle" :columns="requestParamsColumns" :data-source="requestFieldParams" :pagination="false">
+                                <span slot="name" slot-scope="text">{{ text }}</span>
+                            </a-table>
+                        </div>
+                          <div style="margin-top: 20px">
+                              <span class="table-title">响应参数:</span>
+                              <a-table class="table" tableLayout="auto" size="middle" :columns="repParamsColumns" :data-source="responseFieldParams" :pagination="false">
+                                  <a slot="name" slot-scope="text">{{ text }}</a>
+                              </a-table>
+                          </div>
+                        <span class="table-title">响应参数实例:</span>
+                    </div>
+                    <div>
+                        <CodeBlock v-if="interfaceInfo.responseParamsExample"  :code="interfaceInfo.responseParamsExample" ></CodeBlock>
                     </div>
                 </a-tab-pane>
 
@@ -67,9 +65,9 @@
                         在线调试工具
                       </span>
                     <div>
-                        <h4>请求地址：</h4>
+                        <span class="table-title">请求地址：</span>
                         <a-input-search
-                                style="width: 800px"
+                                style="width: 800px;margin-top: 20px"
                                 default-value="mysite"
                                 v-model="interfaceInfo.url"
                                 size="large"
@@ -86,7 +84,7 @@
                         </a-input-search>
 
                         <div style="width: 60%;margin-top: 30px">
-                            <h4>请求参数：</h4>
+                            <span class="table-title">请求参数：</span>
                             <a-table size="middle" :columns="requestParamsColumns1" :data-source="requestFieldParams" :pagination="false">
                                 <span slot="name" slot-scope="text">{{ text }}</span>
                                 <template slot="action" slot-scope="text, record, index">
@@ -95,10 +93,8 @@
                             </a-table>
                         </div>
                         <div style="margin-top: 30px">
-                            <h4>响应参数:</h4>
-                            <pre v-html="responseBody">
-
-                            </pre>
+                            <span class="table-title">响应参数:</span>
+                            <CodeBlock v-if="responseBody" :code="responseBody"></CodeBlock>
                         </div>
                     </div>
                 </a-tab-pane>
@@ -108,7 +104,7 @@
                         错误参照码
                       </span>
                     <div style="width: 60%;">
-                        <h4>错误参照码：</h4>
+                        <span class="table-title">错误参照码：</span>
                         <a-table size="middle" :columns="errorColums" :data-source="errorFieldParams" :pagination="false">
                             <a slot="name" slot-scope="text">{{ text }}</a>
                             <span slot="customTitle"><a-icon type="smile-o" /> Name</span>
@@ -124,14 +120,8 @@
                         示例代码
                       </span>
                     <div>
-                            <mavon-editor class="markdown"
-                                          v-model="interfaceInfo.codeExample"
-                                          :toolbarsFlag=false
-                                          :subfield=false
-                                          defaultOpen="preview"
-                                          :boxShadow="false"
-                                          style="z-index:0"
-                            ></mavon-editor>
+                        <span class="table-title">示例代码：</span>
+                        <CodeBlock style="margin-top: 20px" v-if="interfaceInfo.codeExample" :code="interfaceInfo.codeExample"></CodeBlock>
                     </div>
                 </a-tab-pane>
             </a-tabs>
@@ -144,8 +134,10 @@
         getByIdInterfaceInfo,
         invokeInteface
     } from '../api'
+    import CodeBlock from './code-block'
     import Prism from "prismjs";
     import  'prismjs/components/prism-json.min'
+    import hljs from "highlight.js";
     const requestHeaderColumns = [
         {
             title: '名称',
@@ -252,6 +244,9 @@
     ];
     export default {
         name: "interface-detail",
+        components:{
+            CodeBlock
+        },
         data(){
           return{
               interfaceInfo:{},
@@ -293,23 +288,33 @@
                 }
                 let res=await invokeInteface(param)
                 if(res.data.code===0){
-                    this.responseBody=Prism.highlight(res.data.data, Prism.languages.json,"json")
+                    this.responseBody=JSON.parse(res.data.data,null,2)
                 }else{
                     this.$message.error("请求失败")
                 }
-            }
+            },
         }
     }
 </script>
 
 <style scoped>
-    .a{
-        content: '';
+    .table{
+        margin-top: 10px;
     }
-.a::before{
-    width: 5px;
-    height: 5px;
-    color: #44b0ff;
-    background-color: #44b0ff;
-}
+    .table-title{
+        display: block;
+
+        font-size: 15px;
+        color: black;
+    }
+    .table-title::before{
+        content: '';
+        display: inline-block;
+        width: 7px;
+        height: 15px;
+        color: #44b0ff;
+        background-color: #F56C6C;
+        margin-right: 5px;
+        margin-top: 5px;
+    }
 </style>

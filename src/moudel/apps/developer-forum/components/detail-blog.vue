@@ -167,6 +167,8 @@
                    this.comment={}
                    this.getCommentListByAuthorId();
                    this.$message.success("评论成功")
+               }else{
+                   this.$message.error(res.data.message)
                }
             },
             reply(id,name){
@@ -193,6 +195,8 @@
                     this.$message.success("评论成功")
                     this.getCommentListByAuthorId();
                     this.comment={}
+                }else{
+                    this.$message.error(res.data.messgae)
                 }
             },
             async deleteComment(id){

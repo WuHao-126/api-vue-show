@@ -13,6 +13,9 @@ import 'mavon-editor/dist/css/index.css'
 //工具类挂载
 import {utils}  from './util/utils';
 Vue.prototype.$utils = utils;
+//代码高亮
+// import Highlight from './util/highlight'
+// Vue.use(Highlight)
 
 
 Vue.config.productionTip = false
