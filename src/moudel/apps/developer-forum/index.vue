@@ -83,9 +83,10 @@
         <div class="side">
             <a-card hoverable style="width: 100%">
                 <img
+                        style="height: 150px"
                         slot="cover"
                         alt="example"
-                        src="https://picsum.photos/300/200"
+                        src="../../../assets/advertisement.png"
                 />
                 <template v-if="user!==''" slot="actions" class="ant-card-actions">
                     <a-icon key="setting" type="home" @click="$router.push('/user/detail/'+user.id)"/>
@@ -99,26 +100,54 @@
                     />
                 </a-card-meta>
             </a-card>
-            <div hoverable style="width: 100%;margin-top: 30px">
-                <a-row>
-                    <a-col :span="24">
-                        <a-icon type="crown" />
-                        <span style="margin-left: 5px">站长：聪明的小猫猫</span>
-                    </a-col>
-                </a-row>
-                <a-row>
-                    <a-col :span="24">
-                        <a-icon type="mail" />
-                        <span style="margin-left: 5px">邮箱：1345498749@qq.com</span>
-                    </a-col>
-                </a-row>
-                <a-row>
-                    <a-col :span="24">
-                        <a-icon type="github" />
-                        <span style="margin-left: 5px">github：<a href="https://github.com/WuHao-126/api-project">仓库地址</a></span>
-                    </a-col>
-                </a-row>
+            <div class="hot-blog" >
+                <div class="hot-blog-header" >
+                    🔥 热门文章
+                </div>
+              <a-list size="small"  :data-source="hotBlogList">
+                <a-list-item slot="renderItem" slot-scope="item, index">
+                  <a class="hot-blog-title"  @click="$router.push('/forum/detail/'+item.blogId)" href="javascript:void(0)">
+<!--                    <span style="color: black;margin-right: 5px">{{index+1+""}}</span>-->
+                    {{ item.title }}
+                  </a>
+                  <span style="margin-right: 10px"><a-icon type="fire" />{{item.likeCount}}</span>
+                </a-list-item>
+              </a-list>
             </div>
+          <div class="hot-user" >
+            <div class="hot-user-header" >
+              🔥 用户活跃表
+            </div>
+            <a-list size="small"  :data-source="hotUserList">
+              <a-list-item slot="renderItem" slot-scope="item, index">
+                <a class="hot-user-title"  @click="" href="javascript:void(0)">
+                  <!--                    <span style="color: black;margin-right: 5px">{{index+1+""}}</span>-->
+                  {{ item.username }}
+                </a>
+                <span style="margin-right: 10px"><a-icon type="fire" />{{item.writeCount}}</span>
+              </a-list-item>
+            </a-list>
+          </div>
+          <a-card hoverable style="width: 100%;margin-top: 30px">
+            <a-row>
+              <a-col :span="24">
+                <a-icon type="crown" />
+                <span style="margin-left: 5px">站长：聪明的小猫猫</span>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="24">
+                <a-icon type="mail" />
+                <span style="margin-left: 5px">邮箱：1345498749@qq.com</span>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="24">
+                <a-icon type="github" />
+                <span style="margin-left: 5px">github：<a href="https://github.com/WuHao-126/api-project">仓库地址</a></span>
+              </a-col>
+            </a-row>
+          </a-card>
         </div>
     </div>
 </template>
@@ -128,7 +157,9 @@
         getBlogTagList,
         blogLike,
         blogCollect,
-        deleteBlog
+        deleteBlog,
+        getHotBlog,
+        getHotUser
     } from './api'
     import MarkdownIt from 'markdown-it';
     export default {
@@ -152,9 +183,11 @@
                   current:1,
                   pageSize:10
                 },
-                total:'',
+                // total:'',
                 loading:true,
                 blogList:[],
+                hotBlogList:[],
+                hotUserList:[],
                 color:["#f50","#2db7f5","#87d068","#108ee9","#F56C6C","#909399","#CC901F","#C731E6","#E631B9","#EE1245"],
                 user:'',
                 tags:{},
@@ -162,15 +195,33 @@
             };
         },
         mounted() {
-            this.getBlogList()
+            this.getBlogList();
             this.getCurrentLoginUser();
-            this.getBlogTagList()
+            this.getBlogTagList();
+            this.getHotBlog();
+            this.getHotUser();
         },
         methods:{
             aaa(page){
                 this.requestParam.current=page
                 this.getBlogList()
             },
+            async getHotBlog(){
+              let res = await getHotBlog()
+              if(res.data.code===0){
+                this.hotBlogList=res.data.data
+              }else{
+                this.$message.error("获取热门文章列表失败")
+              }
+            },
+          async getHotUser(){
+            let res = await getHotUser()
+            if(res.data.code===0){
+              this.hotUserList=res.data.data
+            }else{
+              this.$message.error("获取热门文章列表失败")
+            }
+          },
             async getBlogList(){
                 this.loading=true
                 let param={
@@ -282,7 +333,6 @@
         display: inline-block;
         width: 100%;
         height: 120px;
-        /*background-color: blue;*/
     }
     .content{
         display: inline-block;
@@ -318,5 +368,65 @@
         word-break: break-all;
         word-wrap: break-word;
         overflow: hidden;
+    }
+    .hot-blog{
+        width: 100%;
+        height: auto;
+        margin-top: 20px;
+        background-color: white;
+        box-sizing: border-box;
+        border: 1px solid #eeeeee;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .hot-blog-header{
+      height: 40px;
+      width: 100%;
+      padding: 5px 10px;
+      font-size: 16px;
+      background-image: linear-gradient(to bottom, #409EFF, #F2F6FC);
+    }
+    .hot-blog-title{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      width: 75%;
+      height: 20px;
+      margin-left: 15px;
+      color: black;
+    }
+    .hot-blog-title:hover{
+      color: #409EFF;
+    }
+    .hot-user{
+      width: 100%;
+      height: auto;
+      margin-top: 20px;
+      background-color: white;
+      box-sizing: border-box;
+      border: 1px solid #eeeeee;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .hot-user-header{
+      height: 40px;
+      width: 100%;
+      padding: 5px 10px;
+      font-size: 16px;
+      background-image: linear-gradient(to bottom, #F56C6C, #F2F6FC);
+    }
+    .hot-user-title{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+      width: 75%;
+      height: 20px;
+      margin-left: 15px;
+      color: black;
+    }
+    .hot-user-title:hover{
+      color: #409EFF;
     }
 </style>

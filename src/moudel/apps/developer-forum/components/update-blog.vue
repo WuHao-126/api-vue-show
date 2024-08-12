@@ -26,7 +26,8 @@
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        action="api/upload/blog"
+                        action="api/upload/image"
+                        :data="uploadType"
                         :before-upload="beforeUpload"
                         @change="handleChange"
                 >
@@ -102,6 +103,11 @@
             this.getBlogDetailInfo();
         },
         methods:{
+            uploadType(){
+                return{
+                    type:"blog"
+                }
+            },
             async getBlogDetailInfo(){
                let id=this.$route.params.id
                let res= await getBlogDetailInfo(id)

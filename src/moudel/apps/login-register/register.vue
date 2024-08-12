@@ -1,5 +1,4 @@
 <template>
-    <div>
         <div class="box">
             <div class="gradient-border"/>
             <div class="content">
@@ -71,7 +70,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -195,6 +193,8 @@
         position: relative;
         width: 100%;
         height: 100%;
+        background-image: url("../../../assets/loginbg.png");
+        background-size: 100% 100%;
     }
     .title{
         font-size: 35px;

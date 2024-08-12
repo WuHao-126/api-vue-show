@@ -1,5 +1,4 @@
 <template>
-    <div>
         <div class="box">
             <div class="gradient-border"/>
             <div class="content">
@@ -23,12 +22,13 @@
                                 <a-checkbox style="" @change="onChange">
                                     自动登录
                                 </a-checkbox>
-                                <a style="text-align: right" href="javascript:void(0)" @click="skip">还没有账号？点击注册</a>
+                                <a style="text-align: right" href="javascript:void(0)" @click="recoverPassword">忘记密码？点击找回</a>
                             </div>
                             <a-button @click="login" style="width: 80%;margin-top: 10px;height: 45px" type="primary">
                                 登录
                             </a-button>
-                            <div style="width:80%;margin: 50px auto;text-align: left;font-size: 16px">
+                            <div style="width:80%;margin: 30px auto;text-align: left;font-size: 16px">
+                                <span style="float: right"> <a style="font-size: 14px" href="javascript:void(0)" @click="skip">还没有账号？点击注册</a></span>
                                 <span>其他登录方式：</span>
                                 <a-icon style="margin-left: 5px;font-size:18px" type="qq" />
                                 <a-icon style="margin-left: 5px;font-size:18px" type="wechat" />
@@ -66,7 +66,6 @@
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script>
@@ -91,6 +90,9 @@
             },
             callback(){
                 this.loginRequest={}
+            },
+            recoverPassword(){
+              this.$message.error("此功能正在实现，请耐心等待")
             },
             async login(){
                let param={
@@ -127,6 +129,7 @@
     }
     body,html{
         height: 100%;
+        width: 100%;
     }
     .gradient-border {
         position: absolute;
@@ -153,6 +156,8 @@
         position: relative;
         width: 100%;
         height: 100%;
+        background-image: url("../../../assets/loginbg.png");
+        background-size: 100% 100%;
     }
     .title{
         font-size: 35px;

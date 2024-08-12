@@ -26,7 +26,8 @@
                         list-type="picture-card"
                         class="avatar-uploader"
                         :show-upload-list="false"
-                        action="api/upload/blog"
+                        :data="uploadType"
+                        action="api/upload/image"
                         :before-upload="beforeUpload"
                         @change="handleChange"
                 >
@@ -93,6 +94,11 @@
           this.getTage();
         },
         methods:{
+            uploadType(){
+                return{
+                  type:"blog"
+                }
+            },
             async saveBlog(){
               this.blog.tag=JSON.stringify(this.blog.tag)
               let param={
@@ -119,8 +125,9 @@
                 // 第一步.将图片上传到服务器.
                 var formdata = new FormData();
                 formdata.append('file', $file);
+                formdata.append("type","markdown")
                 axios({
-                    url: '/api/upload/markdown',
+                    url: '/api/upload/image',
                     method: 'post',
                     data: formdata,
                     headers: { 'Content-Type': 'multipart/form-data' },

@@ -142,7 +142,7 @@
         z-index: 2;
         width: 100%;
         height: 830px;
-        background-image: url("../../../assets/background-pattern.png");
+        background-image: url("../../../assets/background-pattern.webp");
         background-size: 100% 100%;
     }
     .back-img2{
@@ -152,7 +152,7 @@
         right: 100px;
         top: 20px;
         z-index: 2;
-        background-image: url("../../../assets/illustration.png");
+        background-image: url("../../../assets/illustration.webp");
         background-size: 100% 100%;
     }
     .home-content{

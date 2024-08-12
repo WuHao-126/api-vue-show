@@ -5,9 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    interfaceImgUrl:'http://182.92.7.24:9090/api/interface/',
-    userImgUrl:'http://182.92.7.24:9090/api/user/',
-    blogImgUrl:'http://182.92.7.24:9090/api/blog/',
+    interfaceImgUrl:'http://101.126.87.57:9090/api/interface/',
+    userImgUrl:'http://101.126.87.57:9090/api/user/',
+    blogImgUrl:'http://101.126.87.57:9090/api/blog/',
     applyCurrent:''
   },
   getters: {

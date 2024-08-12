@@ -3,7 +3,7 @@ module.exports = {
   devServer: {
     open:true,
     host: 'localhost',
-    port: 8080,
+    port: 80,
     https: false,
     proxy: {
       '/api': { //请求路径关键字

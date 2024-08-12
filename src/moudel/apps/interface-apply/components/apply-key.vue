@@ -146,7 +146,7 @@
             };
         },
         mounted() {
-          this.current=this.$store.state.applyCurrent
+            this.current=this.$store.state.applyCurrent
             this.index=this.current;
         },
         beforeCreate() {
@@ -167,13 +167,12 @@
                 let res = await getKey();
                 if(res.data.code===0){
                    this.key=res.data.data
-                    this.$store.commit("updateApplyCurrent",2)
+                    this.$store.commit("",2)
                     this.index=2
                 }
             },
             async sendCode(){
                 let email =this.form.getFieldValue('email')
-                console.log(email)
                 if(email === null || email ==='' || email === undefined){
                     this.$message.error("请输入邮箱")
                     return

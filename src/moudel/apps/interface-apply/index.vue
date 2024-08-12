@@ -9,26 +9,27 @@
 
             </div>
             <a-card class="card"  hoverable :bordered="true">
-                <p style="font-size: 30px;font-weight: 800">申请加入</p>
+                <p style="font-size: 30px;font-weight: 800">GitHub月榜</p>
                 <a-divider />
                 <p>1、需要您提供详细的接口信息</p>
                 <p>2、需要您提供合规性证明</p>
                 <p>3、请您提供合作条款和条件</p>
                 <p>4、请您提供联系方式</p>
 
-                <a-button class="button" @click="applyAdd">
+                <a-button class="button" @click="">
                     申请
                 </a-button>
             </a-card>
             <a-card class="card" hoverable  :bordered="true">
-                <p style="font-size: 30px;font-weight: 800">申请Key</p>
+                <p style="font-size: 30px;font-weight: 800">站长的开源</p>
                 <a-divider />
-                <p>1、需要您提供详细的接口信息</p>
-                <p>2、需要您提供合规性证明</p>
-                <p>3、请您提供合作条款和条件</p>
-                <p>4、请您提供联系方式</p>
-                <a-button class="button1" @click="applyKey()">
-                    申请
+                <a class="project">1、API接口开放平台</a>
+                <a class="project">2、动态线程池项目</a>
+                <a class="project">3、OpenAI自动代码评审</a>
+                <a class="project">4、旅游点评网</a>
+                <a class="project">5、大营销平台</a>
+                <a-button class="button1" @click="alert('敬请期待')">
+                    更多
                 </a-button>
             </a-card>
             <a-card class="card" hoverable  :bordered="true">
@@ -38,7 +39,7 @@
                 <p>2、需要您提供合规性证明</p>
                 <p>3、请您提供合作条款和条件</p>
                 <p>4、请您提供联系方式</p>
-                <a-button class="button" @click="applyCustomized">
+                <a-button class="button" @click="">
                     申请
                 </a-button>
             </a-card>
@@ -69,7 +70,7 @@
                 let user = res.data.data
                 if (user.isExistKey){
                     this.$store.commit("updateApplyCurrent",2)
-                }else if (user.email ==null){
+                }else if (user.email === null || user.email ===''){
                     this.$store.commit("updateApplyCurrent",0)
                 }else{
                     this.$store.commit("updateApplyCurrent",1)
@@ -161,6 +162,15 @@
         border: 1px solid black;
         background-color: black;
         color: white;
+    }
+    .project{
+      font-size: 14px;
+      display: block;
+      margin: 5px;
+      color: white
+    }
+    .project:hover{
+      color: chartreuse;
     }
 
 </style>

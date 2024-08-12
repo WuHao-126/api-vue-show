@@ -26,7 +26,8 @@
                                 list-type="picture-card"
                                 class="avatar-uploader"
                                 :show-upload-list="false"
-                                action="api/upload/user"
+                                :data="uploadType"
+                                action="api/upload/image"
                                 :before-upload="beforeUpload"
                                 @change="handleChange"
                         >
@@ -110,23 +111,23 @@
                         </a-list>
                     </div>
                 </a-tab-pane>
-                <a-tab-pane key="3">
-                  <span slot="tab">
-                    <a-icon type="android" />
-                    我的消息
-                  </span>
-                    <div>
-                        <a-list item-layout="horizontal" :data-source="myCollect">
-                            <a-list-item slot="renderItem" slot-scope="item, index">
-                                <a-list-item-meta
-                                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-                                >
-                                    <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
-                                </a-list-item-meta>
-                            </a-list-item>
-                        </a-list>
-                    </div>
-                </a-tab-pane>
+<!--                <a-tab-pane key="3">-->
+<!--                  <span slot="tab">-->
+<!--                    <a-icon type="android" />-->
+<!--                    我的消息-->
+<!--                  </span>-->
+<!--                    <div>-->
+<!--                        <a-list item-layout="horizontal" :data-source="myCollect">-->
+<!--                            <a-list-item slot="renderItem" slot-scope="item, index">-->
+<!--                                <a-list-item-meta-->
+<!--                                        description="Ant Design, a design language for background applications, is refined by Ant UED Team"-->
+<!--                                >-->
+<!--                                    <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>-->
+<!--                                </a-list-item-meta>-->
+<!--                            </a-list-item>-->
+<!--                        </a-list>-->
+<!--                    </div>-->
+<!--                </a-tab-pane>-->
             </a-tabs>
         </a-card>
     </div>
@@ -149,10 +150,18 @@
         name: "index",
         data(){
             return{
+                type:"user",
                 isButtonDisabled: false, // 控制按钮是否禁用
                 countdown: 60, // 倒计时秒数
                 user:'',
-                updateUserParam:'',
+                updateUserParam:{
+                    id:'',
+                    userName:'',
+                    userAccount:'',
+                    userAvatar:'',
+                    description:'',
+                    email:''
+                },
                 loading: false,
                 imageUrl: '',
                 emailParam:{
@@ -186,6 +195,11 @@
             this.form = this.$form.createForm(this, { name: 'register' });
         },
         methods:{
+            uploadType(file){
+              return{
+                  type: "user"
+              }
+            },
             async getCurrentLoginUser(){
               let res = await this.$utils.getCurrentLoginUser()
                 if(res.data.code === 0){
@@ -303,7 +317,12 @@
                 let param={
                     ...this.user
                 }
-                this.updateUserParam=param
+                this.updateUserParam.id=param.id
+                this.updateUserParam.userName=param.userName
+                this.updateUserParam.userAvatar=param.userAvatar
+                this.updateUserParam.description=param.description
+                this.updateUserParam.email=param.email
+                this.updateUserParam.userAccount=param.userAccount
                 this.visible = true;
             },
             handleOk(e) {
@@ -333,11 +352,11 @@
             beforeUpload(file) {
                 const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
                 if (!isJpgOrPng) {
-                    this.$message.error('You can only upload JPG file!');
+                    this.$message.error('请上传图片格式的文件');
                 }
-                const isLt2M = file.size / 1024 / 1024 < 2;
+                const isLt2M = file.size / 1024 / 1024 < 5;
                 if (!isLt2M) {
-                    this.$message.error('Image must smaller than 2MB!');
+                    this.$message.error('文件大小需小于 5MB!');
                 }
                 return isJpgOrPng && isLt2M;
             },
@@ -350,7 +369,8 @@
       position: relative;
       border-radius: 15px;
       padding: 20px;
-      background-image: url("http://182.92.7.24:9090/api/web/569-1200x200.jpg");
+      background-image: url("http://101.126.87.57:9090/api/667-1200x300.jpg");
+      background-size: 100% 100%;
   }
     .user-name{
         position: absolute;

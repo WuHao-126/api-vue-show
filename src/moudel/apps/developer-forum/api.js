@@ -43,3 +43,10 @@ export const deleteBlog = (param) => {
 export const updateBlog = (param) => {
     return request.post("/api/blog/update",param)
 }
+//修改博客
+export const getHotBlog = () => {
+    return request.get("/api/blog/hot/blog")
+}
+export const getHotUser = () => {
+    return request.get("/api/blog/hot/user")
+}

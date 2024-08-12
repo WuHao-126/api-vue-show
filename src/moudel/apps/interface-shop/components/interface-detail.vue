@@ -9,7 +9,7 @@
                     {{interfaceInfo.responseType}}
                 </a-descriptions-item>
                 <a-descriptions-item label="接口类型">
-                    {{interfaceInfo.type}}
+                    {{interfaceInfo.typeName}}
                 </a-descriptions-item>
                 <a-descriptions-item label="接口地址">
                     {{interfaceInfo.url}}
@@ -51,9 +51,9 @@
                                   <a slot="name" slot-scope="text">{{ text }}</a>
                               </a-table>
                           </div>
-                        <span class="table-title">响应参数实例:</span>
+                        <span class="table-title" style="margin-top: 20px">响应参数实例:</span>
                     </div>
-                    <div>
+                    <div style="margin-top: 10px">
                         <CodeBlock v-if="interfaceInfo.responseParamsExample"  :code="interfaceInfo.responseParamsExample" ></CodeBlock>
                     </div>
                 </a-tab-pane>
@@ -283,14 +283,16 @@
                 this.requestInvokeParam.url=value
                 this.requestInvokeParam.requestHeaderParams=this.requestHeaderParams
                 this.requestInvokeParam.requestFieldParams=this.requestFieldParams
+                this.requestInvokeParam.id=this.$route.params.id
                 let param={
                     ...this.requestInvokeParam
                 }
                 let res=await invokeInteface(param)
                 if(res.data.code===0){
+                    console.log(1111)
                     this.responseBody=JSON.parse(res.data.data,null,2)
                 }else{
-                    this.$message.error("请求失败")
+                    this.$message.error(res.data.message)
                 }
             },
         }
