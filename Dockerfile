@@ -14,7 +14,6 @@ COPY dist/ /usr/share/nginx/html/
 COPY nginx.conf /etc/nginx/nginx.conf
 
 
-
 # 暴露 Nginx 运行的端口
 EXPOSE 80
 

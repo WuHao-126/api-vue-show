@@ -38,19 +38,19 @@ jobs:
         with:
           context: .
           push: true
-          tags: wuhao126/api-docker:api_vue
+          tags: wuhao126/api_vue_show:0.0.1
           file: Dockerfile
           platforms: linux/amd64,linux/arm64
 
-#      - name: Deploy to server via SSH
-#        uses: appleboy/ssh-action@v0.1.4
-#        with:
-#          host: 101.126.87.57
-#          username: root
-#          password: wuhao126...
-#          script: |
-#            docker stop api_vue
-#            docker rm api_vue
-#            docker rmi api_vue
-#            docker pull wuhao126/api_vue:laster
-#            docker run -d --name api_vue -p 80:80 api_vue
+      - name: Deploy to server via SSH
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: 101.126.87.57
+          username: root
+          password: wuhao126...
+          script: |
+            docker stop api_vue || true
+            docker rm api_vue || true
+            docker rmi wuhao126/api_vue_show:0.0.1 || true
+            docker pull wuhao126/api_vue_show:0.0.1
+            docker run -d --name api_vue -p 80:80 api_vue
