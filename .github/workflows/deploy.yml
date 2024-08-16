@@ -53,4 +53,4 @@ jobs:
             docker rm api_vue || true
             docker rmi wuhao126/api_vue_show:0.0.1 || true
             docker pull wuhao126/api_vue_show:0.0.1
-            docker run -d --name api_vue -p 80:80 api_vue
+            docker run -d --name api_vue -p 80:80 wuhao126/api_vue_show:0.0.1
