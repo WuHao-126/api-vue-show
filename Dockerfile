@@ -13,6 +13,8 @@ COPY dist/ /usr/share/nginx/html/
 # 复制自定义的 Nginx 配置文件（如果有）
 COPY nginx.conf /etc/nginx/nginx.conf
 
+
+
 # 暴露 Nginx 运行的端口
 EXPOSE 80
 
