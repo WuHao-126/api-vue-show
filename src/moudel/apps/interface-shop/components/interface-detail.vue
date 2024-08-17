@@ -88,7 +88,7 @@
                             <a-table size="middle" :columns="requestParamsColumns1" :data-source="requestFieldParams" :pagination="false">
                                 <span slot="name" slot-scope="text">{{ text }}</span>
                                 <template slot="action" slot-scope="text, record, index">
-                                    <a-input v-model="record.value" />
+                                    <a-input :disabled="decide(record)" v-model="record.value" />
                                 </template>
                             </a-table>
                         </div>
@@ -289,12 +289,19 @@
                 }
                 let res=await invokeInteface(param)
                 if(res.data.code===0){
-                    console.log(1111)
                     this.responseBody=JSON.parse(res.data.data,null,2)
                 }else{
                     this.$message.error(res.data.message)
                 }
             },
+            decide(record){
+              let fieldName=record.fieldName;
+              if(fieldName === 'accessKey' || fieldName === 'secretKey'){
+                return true;
+              }else{
+                return false;
+              }
+            }
         }
     }
 </script>
