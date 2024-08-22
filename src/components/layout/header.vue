@@ -4,7 +4,7 @@
         <a-menu v-model="current" mode="horizontal" style="height: 49px;display: inline-block;margin-left: 20px;opacity: 1">
             <a-menu-item key="1" @click="page('/index')"> <a-icon type="home" />网站首页 </a-menu-item>
             <a-menu-item key="2" @click="page('/interface')"> <a-icon type="api" />接口商城 </a-menu-item>
-            <a-menu-item key="3" @click="page('/interface/apply')"> <a-icon type="solution" />开源项目</a-menu-item>
+            <a-menu-item key="3" @click="page('/interface/apply')"> <a-icon type="solution" />开源项目6666</a-menu-item>
             <a-menu-item key="4" @click="page('/forum')"><a-icon type="mail" />开发论坛</a-menu-item>
         </a-menu>
         <div style="float: right;display: inline-block">
