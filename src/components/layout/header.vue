@@ -4,7 +4,7 @@
         <a-menu v-model="current" mode="horizontal" style="height: 49px;display: inline-block;margin-left: 20px;opacity: 1">
             <a-menu-item key="1" @click="page('/index')"> <a-icon type="home" />网站首页 </a-menu-item>
             <a-menu-item key="2" @click="page('/interface')"> <a-icon type="api" />接口商城 </a-menu-item>
-            <a-menu-item key="3" @click="page('/interface/apply')"> <a-icon type="solution" />开源项目6666</a-menu-item>
+            <a-menu-item key="3" @click="page('/interface/apply')"> <a-icon type="solution" />开源项目</a-menu-item>
             <a-menu-item key="4" @click="page('/forum')"><a-icon type="mail" />开发论坛</a-menu-item>
         </a-menu>
         <div style="float: right;display: inline-block">
@@ -19,12 +19,16 @@
                     <div>
                         <a href="javascript:void(0)" @click="$router.push('/user/detail/'+ user.id)">我的主页</a><br>
                     </div>
+                  <div style="margin-top: 10px">
+                    <a href="javascript:void(0)" @click="clock('/clock/'+user.id)">我的打卡</a><br>
+                  </div>
                     <div style="margin-top: 10px">
                         <a href="javascript:void(0)" @click="applyKey">我的密钥</a><br>
                     </div>
                     <div style="margin-top: 10px">
                         <a href="javascript:void(0)" @click="logout()">退出登录</a><br>
                     </div>
+
                 </template>
               <a-badge :count="1" v-if="user.userAvatar">
                   <a-avatar  :src="$store.state.userImgUrl+user.userAvatar" shape="square" icon="user"/>
@@ -54,6 +58,15 @@
             this.getNotice()
         },
         methods:{
+            clock(url){
+              if (url === this.$route.path) {
+                // 如果点击的是当前活动的路由，则刷新页面
+                this.$router.go(0);
+              } else {
+                // 否则进行正常的路由跳转
+                this.$router.push(url);
+              }
+            },
             async getCurrentLoginUser(){
                let res= await this.$utils.getCurrentLoginUser();
                if(res!=null){

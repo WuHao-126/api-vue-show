@@ -77,7 +77,7 @@
                 </a-list-item>
             </a-list>
             <div style="text-align: right">
-                <a-pagination :default-current="1" :total=total @change="aaa"/>
+                <a-pagination :default-current="1" :total=total @change="pageMethod"/>
             </div>
         </div>
         <div class="side">
@@ -202,7 +202,7 @@
             this.getHotUser();
         },
         methods:{
-            aaa(page){
+          pageMethod(page){
                 this.requestParam.current=page
                 this.getBlogList()
             },
