@@ -1,4 +1,4 @@
-import request from "axios";
+import request from "@/config/axios";
 //写博客
 export const insertBlog = (param) =>{
     return request.post("/api/blog/insert",param)

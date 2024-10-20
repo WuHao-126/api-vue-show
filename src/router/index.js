@@ -67,6 +67,10 @@ const router=new VueRouter({
                 {
                     path: '/user/detail/:id',
                     component: () => import('../moudel/apps/user-info/index')
+                },
+                {
+                    path: '/clock/:id',
+                    component: () => import('../moudel/apps/clock-in/index.vue')
                 }
             ]
         }

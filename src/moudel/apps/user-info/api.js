@@ -1,4 +1,4 @@
-import request from "axios";
+import request from "@/config/axios";
 
 /**
  * 获取我的博客

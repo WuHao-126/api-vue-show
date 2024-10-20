@@ -1,4 +1,4 @@
-import request from 'axios'
+import request from "@/config/axios";
 //登录
 export const login = (param)=>{
     return request.post("/api/user/login",param)

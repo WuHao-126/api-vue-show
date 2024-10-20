@@ -1,4 +1,4 @@
-import request from 'axios'
+import request from "@/config/axios";
 export const sendCode = (param)=>{
     return request.post("/api/email/code",param)
 }

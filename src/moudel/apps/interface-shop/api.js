@@ -1,4 +1,4 @@
-import request from 'axios'
+import request from "@/config/axios";
 export const getInterfaceList = (param) => {
     return request.post("/api/interface/page",param)
 }

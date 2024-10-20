@@ -1,4 +1,4 @@
-import request from "axios";
+import request from "@/config/axios";
 /**
  * 获取网站信息
  * @returns {Promise<AxiosResponse<any>>}

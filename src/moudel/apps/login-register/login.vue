@@ -101,11 +101,11 @@
                let res=await login(param)
                // let flag=this.$utils.dataCheck(res,"登录成功",null,"/")
                 if(res.data.code===0){
-                    let userId=res.data.data
+                    let token=res.data.data.token
                     if(this.checked){
-                        localStorage.setItem("user",userId)
+                        localStorage.setItem("token",token)
                     }else{
-                        window.sessionStorage.setItem("user",userId)
+                        window.sessionStorage.setItem("token",token)
                     }
                     this.$utils.routerPush('/')
                 }else{
