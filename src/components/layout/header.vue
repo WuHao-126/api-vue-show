@@ -75,6 +75,7 @@
                        this.user=res.data.data
                    }else{
                        //未登录
+                       this.$message.error(res.data.message)
                    }
                }
             },
@@ -82,9 +83,10 @@
               let res=await userLogout()
               let flag=this.$utils.dataCheck(res,"退出成功","","")
               if(flag){
-                 localStorage.removeItem("user")
-                 window.sessionStorage.removeItem("user")
-                  this.user={}
+                 localStorage.removeItem("token")
+                 window.sessionStorage.removeItem("token")
+                 this.user={}
+                 this.$router.go(0)
               }
             },
             async getNotice(){

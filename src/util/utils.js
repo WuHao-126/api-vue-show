@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import router from "@/router";
 import route from '@/router'
-import request from 'axios'
+import request from '../config/axios'
 export const utils = {
     dataCheck (res,success,error,url){
         if(res!=null){
@@ -31,13 +31,13 @@ export const utils = {
         return false
     },
     async getCurrentLoginUser(){
-        let param = window.sessionStorage.getItem("user");
-        let param1= localStorage.getItem("user");
+        let param = window.sessionStorage.getItem("token");
+        let param1= localStorage.getItem("token");
         let res=null;
         if(param!==null){
-            res = await  request.get("/api/user/current/"+param)
+            res = await  request.get("/api/user/current")
         }else if(param1!==null){
-            res = await request.get("/api/user/current/"+param1)
+            res = await request.get("/api/user/current")
         }
         if(res === null){
             return null;
