@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                             <div style="width:80%;margin: 10px auto;display: flex;justify-content: space-between;">
-                                <a-checkbox style="" @change="onChange">
+                                <a-checkbox style="" @change="isAutomaticLogin" v-model="checked">
                                     自动登录
                                 </a-checkbox>
                                 <a style="text-align: right" href="javascript:void(0)" @click="recoverPassword">忘记密码？点击找回</a>
@@ -47,7 +47,7 @@
                                 </div>
                             </div>
                             <div style="width:80%;margin: 10px auto;display: flex;justify-content: space-between;">
-                                <a-checkbox style="" @change="onChange">
+                                <a-checkbox style="" @change="isAutomaticLogin" v-model="checked">
                                     自动登录
                                 </a-checkbox>
                                 <a style="text-align: right" href="javascript:void(0)" @click="skip">还没有账号？点击注册</a>
@@ -74,7 +74,7 @@
         name: "index",
         data(){
             return{
-                checked:false,
+                checked:true,
                 loginRequest:{}
             }
         },
@@ -85,7 +85,7 @@
             skip(){
                 this.$router.push('/register')
             },
-            onChange(e) {
+            isAutomaticLogin(e) {
                 this.checked = e.target.checked;
             },
             callback(){
@@ -99,13 +99,13 @@
                    ...this.loginRequest
                }
                let res=await login(param)
-               // let flag=this.$utils.dataCheck(res,"登录成功",null,"/")
                 if(res.data.code===0){
                     let token=res.data.data.token
-                    // if(this.checked){
-                  if(true){
+                    if(this.checked){
+                      console.log("本次是自动登录")
                         localStorage.setItem("token",token)
                     }else{
+                      console.log("本次非自动登录")
                         window.sessionStorage.setItem("token",token)
                     }
                     this.$utils.routerPush('/')

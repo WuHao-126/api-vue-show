@@ -30,20 +30,21 @@ export const utils = {
 
         return false
     },
-    async getCurrentLoginUser(){
-        let param = window.sessionStorage.getItem("token");
-        let param1= localStorage.getItem("token");
-        let res=null;
-        if(param!==null){
-            res = await  request.get("/api/user/current")
-        }else if(param1!==null){
-            res = await request.get("/api/user/current")
-        }
+    async getCurrentLoginUser(that){
+        let sessionStorageToken = window.sessionStorage.getItem("token");
+        let localStorageToken = localStorage.getItem("token");
+        let res = await  request.get("/api/user/current")
         if(res === null){
             return null;
         }
-        if(res.data.code=== 0){
+        if(res.data.code === 0 && res.data.data != null){
             return res;
+        }else if(localStorageToken != null){
+            that.$message.error("登录状态已过期，请重新登录")
+            localStorage.removeItem("token")
+        }else if(sessionStorageToken != null){
+            that.$message.error("登录状态已过期，请重新登录")
+            window.sessionStorage.removeItem("token")
         }
         return null;
     },
