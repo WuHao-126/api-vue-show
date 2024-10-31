@@ -65,6 +65,10 @@ const router=new VueRouter({
                     component: () => import('../moudel/apps/developer-forum/components/detail-blog')
                 },
                 {
+                    path:'/tool',
+                    component: () => import('../moudel/apps/developer-tool/index')
+                },
+                {
                     path: '/user/detail/:id',
                     component: () => import('../moudel/apps/user-info/index')
                 }
