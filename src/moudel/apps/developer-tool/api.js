@@ -8,3 +8,11 @@ export const getToolFileList = (param)=>{
         params:param
     });
 }
+
+export const uploadToolFile = (formData)=>{
+    return request.post("/api/upload/tool/list",formData,{
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+}
