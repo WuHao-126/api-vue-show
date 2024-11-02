@@ -12,7 +12,7 @@
           >
             <a slot="title" href="#">{{ item.name }}</a>
           </a-list-item-meta>
-          <a slot="actions">下载</a>
+          <a slot="actions" @click="downloadFile(item.id)">下载</a>
         </a-list-item>
       </a-list>
     </a-card>
@@ -55,7 +55,11 @@
 </template>
 <script>
 
-import {getToolFileList,uploadFile,uploadToolFile} from "@/moudel/apps/developer-tool/api";
+import {getToolFileList,
+  uploadFile,
+  uploadToolFile,
+    downloadFile
+} from "@/moudel/apps/developer-tool/api";
 
 export default {
   data() {
@@ -96,7 +100,7 @@ export default {
       this.visible = true;
     },
     handleCancel(e) {
-      console.log('Clicked cancel button');
+      this.file = ""
       this.visible = false;
     },
 
@@ -117,7 +121,6 @@ export default {
       }
     },
     async handleOk() {
-      console.log(111)
       // 提交所有信息，包括文件上传
       const formData = new FormData();
       formData.append('file', this.file);
@@ -128,12 +131,32 @@ export default {
         let res = await uploadToolFile(formData);
         if (res.data.code == 0){
           this.$message.success('上传成功！');
+          this.handleCancel()
+          this.getToolFileLists()
         }
         // 处理成功后的逻辑
       } catch (error) {
         this.$message.error('上传失败！');
       }
     },
+    async downloadFile(id) {
+      let param={
+        id:id
+      }
+      let res = await downloadFile(param);
+      console.log(res.data.data)
+      if(res.data.code==0){
+        let fileUrl = res.data.data;
+        const a = document.createElement('a');
+        a.href = fileUrl;
+        a.download = 'filename.ext'; // 你可以设置一个默认的文件名，或者根据实际情况动态设置
+        document.body.appendChild(a);
+        // 触发a标签的点击事件，开始下载
+        a.click();
+        // 移除a标签
+        document.body.removeChild(a);
+      }
+    }
   }
 };
 </script>

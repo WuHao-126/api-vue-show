@@ -10,9 +10,15 @@ export const getToolFileList = (param)=>{
 }
 
 export const uploadToolFile = (formData)=>{
-    return request.post("/api/upload/tool/list",formData,{
+    return request.post("/api/upload/tool/insert",formData,{
         headers: {
             'Content-Type': 'multipart/form-data',
         },
+    });
+}
+
+export const downloadFile = (param)=>{
+    return request.get("/api/upload/tool/download",{
+        params:param
     });
 }
